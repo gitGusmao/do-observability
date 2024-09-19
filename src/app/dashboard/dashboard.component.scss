@@ -118,6 +118,20 @@ ul {
   overflow: auto;
 }
 
+.data-frame-item {
+  .data-frame-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    p {
+      font-weight: 700;
+      font-size: 14px;
+    }
+  }
+}
+
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .single-stats-box {
     text-align: center;

@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
 
 import {
   MAT_DIALOG_DATA,
@@ -43,7 +44,7 @@ import { DataFrame } from '../shared/interfaces/data-frame';
     MatTableModule,
     FormsModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -71,7 +72,7 @@ export class DashboardComponent {
         if (index !== undefined) {
           this.dataFrame[index] = result;
         } else {
-          result.path = `lerCsv(${result.path})=${result.variable}`;
+          result.path = `ler${result.type}(${result.path})->${result.variable}`;
           this.dataFrame.push(result);
         }
       }
@@ -99,7 +100,7 @@ export class DashboardComponent {
       dataFramePath != ''
         ? `${dataFramePath}\n${this.textQuery}`
         : this.textQuery;
-    console.log(fullQuery);
+    console.log(fullQuery)
     this._pocService.query(fullQuery).subscribe(
       (response: any) => {
         const data = response.body.data;
@@ -121,9 +122,13 @@ export class DashboardComponent {
   template: `<h2 mat-dialog-title>New Data Frame</h2>
     <mat-dialog-content>
       <form [formGroup]="dataFrameForm" class="d-flex flex-column pt-25">
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" />
+        <mat-form-field>
+          <mat-label>Type file</mat-label>
+          <mat-select formControlName="type">
+            <mat-option value="mysql">Mysql</mat-option>
+            <mat-option value="parquet">Parquet</mat-option>
+            <mat-option value="csv">Csv</mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Path</mat-label>
@@ -154,6 +159,7 @@ export class DashboardComponent {
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
+    MatSelectModule,
   ],
   styles: `
     .py-25 {
@@ -169,7 +175,7 @@ export class DataFrameDialog {
 
   constructor(private fb: FormBuilder) {
     this.dataFrameForm = this.fb.group({
-      name: ['', Validators.required],
+      type: ['', Validators.required],
       path: ['', Validators.required],
       variable: ['', Validators.required],
     });

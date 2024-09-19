@@ -1,5 +1,5 @@
 export interface DataFrame {
-    name: string;
+    type: string;
     path: string;
     variable: string;
 }

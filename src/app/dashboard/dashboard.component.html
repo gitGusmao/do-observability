@@ -59,9 +59,12 @@
       <mat-card-content>
         <div class="d-flex flex-column">
           <ul class="data-frame-wrapper">
-            @for (data of dataFrame; track data.name; let idx = $index) {
+            @for (data of dataFrame; track data.variable; let idx = $index) {
             <li class="data-frame-item mb-15">
-              <span>{{ data.name }}</span>
+              <div class="data-frame-description">
+                <span>Variable: {{ data.variable }}</span>
+                <p>{{ data.type }}</p>
+              </div>
               <div class="d-flex">
                 <button mat-icon-button (click)="openDialog(data, idx)">
                   <mat-icon>edit</mat-icon>
