@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -60,6 +60,8 @@ export class DashboardComponent {
 
   readonly dialog = inject(MatDialog);
 
+  @ViewChild('queryTextArea') meuTextarea!: ElementRef;
+
   constructor(private _pocService: PocsService) {}
 
   openDialog(data?: any, index?: number) {
@@ -91,17 +93,21 @@ export class DashboardComponent {
   query() {
     this.loading = true;
 
+    const textarea = this.meuTextarea.nativeElement;
+    const inicio = textarea.selectionStart;
+    const fim = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(inicio, fim) || undefined;
+
     let dataFramePath: string = '';
     this.dataFrame.forEach((df) => {
       dataFramePath += `${df.path}\n`;
     });
 
-    const fullQuery =
-      dataFramePath != ''
-        ? `${dataFramePath}\n${this.textQuery}`
-        : this.textQuery;
-    console.log(fullQuery)
-    this._pocService.query(fullQuery).subscribe(
+    const fullQuery = selectedText ? selectedText : this.textQuery;
+    const body =
+      dataFramePath != '' ? `${dataFramePath}\n${fullQuery}` : fullQuery;
+
+    this._pocService.query(body).subscribe(
       (response: any) => {
         const data = response.body.data;
 
@@ -125,9 +131,9 @@ export class DashboardComponent {
         <mat-form-field>
           <mat-label>Type file</mat-label>
           <mat-select formControlName="type">
-            <mat-option value="mysql">Mysql</mat-option>
-            <mat-option value="parquet">Parquet</mat-option>
-            <mat-option value="csv">Csv</mat-option>
+            <mat-option value="Mysql">Mysql</mat-option>
+            <mat-option value="Parquet">Parquet</mat-option>
+            <mat-option value="Csv">Csv</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline">

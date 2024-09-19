@@ -27,8 +27,18 @@
               matInput
               rows="12"
               appHighlightSQL
+              #queryTextArea
               [(ngModel)]="textQuery"
             ></textarea>
+            <script>
+              function obterTextoSelecionado() {
+                var textarea = document.getElementById("query");
+                var inicio = textarea.selectionStart;
+                var fim = textarea.selectionEnd;
+                var textoSelecionado = textarea.value.substring(inicio, fim);
+                alert("Texto selecionado: " + textoSelecionado);
+              }
+            </script>
             <!-- <div appHighlightSQL contenteditable="true"></div> -->
           </mat-form-field>
 
